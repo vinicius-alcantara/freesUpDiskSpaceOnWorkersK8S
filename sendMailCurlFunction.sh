@@ -10,7 +10,9 @@ MAIL_TO_2="vinicius.redes2020@gmail.com";
 SUBJECT_SUCCESS="SUCCESS: SRM-SRV-";
 SUBJECT_FAILED="FAILED: SRM-SRV-";
 SUCCESS_NAME_FILE_EMAIL="body_mail_success.txt";
-FAILED_NAME_FILE_EMAIL="body_mail_failed.txt";
+FAILED_NAME_FILE_EMAIL_CODE_1="body_mail_failed1.txt";
+FAILED_NAME_FILE_EMAIL_CODE_2="body_mail_failed2.txt";
+FAILED_NAME_FILE_EMAIL_CODE_3="body_mail_failed3.txt";
 CURRENT_TIME_LOCAL="$(date +%H)";
 
 if [ "$CURRENT_TIME_LOCAL" -ge 0 ] && [ "$CURRENT_TIME_LOCAL" -lt 12 ];
@@ -47,8 +49,9 @@ To: "$MAIL_TO_1" "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Falha ao tentar liberar espaço em dsico no servidor/worker mencionado no assunto deste e-mail. Por favor, verificar!
-
+Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail.
+Erro: Falha ao executar o restart no serviço do docker!!!
+Por favor, verificar.
 ";
 #######################################
 BODY_MAIL_FAILED_CODE_2="
@@ -57,8 +60,9 @@ To: "$MAIL_TO_1" "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Falha ao tentar liberar espaço em dsico no servidor/worker mencionado no assunto deste e-mail. Por favor, verificar!
-
+Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail. 
+Erro: Falha ao realizar uncordon no worker.
+Por favor, verificar.
 ";
 #######################################
 BODY_MAIL_FAILED_CODE_3="
@@ -67,8 +71,9 @@ To: "$MAIL_TO_1" "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Falha ao tentar liberar espaço em dsico no servidor/worker mencionado no assunto deste e-mail. Por favor, verificar!
-
+Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail. 
+Error: Falha ao realizar drain no worker. Provável ocorrência de timeout ao realizar o drain.
+Por favor, verificar
 ";
 #######################################
 
@@ -81,16 +86,34 @@ function create_body_mail_success() {
 
 create_body_mail_success;
 
-function create_body_mail_failed() {
+function create_body_mail_failed_code_1() {
         cd ~;
         CURRENT_LOCAL=$(pwd);
-        echo "$BODY_MAIL_FAILED" | sed 1d > "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL";
+        echo "$BODY_MAIL_FAILED_CODE_1" | sed 1d > "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_1";
 
 }
 
-create_body_mail_failed;
+create_body_mail_failed_code_1;
 
-function send_email_success() {
+function create_body_mail_failed_code_2() {
+        cd ~;
+        CURRENT_LOCAL=$(pwd);
+        echo "$BODY_MAIL_FAILED_CODE_2" | sed 1d > "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_2";
+
+}
+
+create_body_mail_failed_code_2;
+
+function create_body_mail_failed_code_3() {
+        cd ~;
+        CURRENT_LOCAL=$(pwd);
+        echo "$BODY_MAIL_FAILED_CODE_3" | sed 1d > "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_3";
+
+}
+
+create_body_mail_failed_code_3;
+
+function sendEmailNotificationSuccess() {
 
   curl --ssl-reqd \
     --url "$SMTP_SRV":"$SMTP_PORT" \
@@ -107,9 +130,9 @@ function send_email_success() {
 
 }
 
-send_email_success;
+#sendEmailNotificationSuccess;
 
-function send_email_failed() {
+function sendEmailNotificationFailedStatusDocker() {
 
   curl --ssl-reqd \
     --url "$SMTP_SRV":"$SMTP_PORT" \
@@ -117,15 +140,51 @@ function send_email_failed() {
     --mail-from "$MAIL_FROM" \
     --mail-rcpt "$MAIL_TO_1" \
     --mail-rcpt "$MAIL_TO_2" \
-    --upload-file "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL";
+    --upload-file "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_1";
 
-  if [ -e "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL" ];
+  if [ -e "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_1" ];
   then
-     rm -rf "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL";
+     rm -rf "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_1";
   fi
-
 
 }
 
-#send_email_failed;
+#sendEmailNotificationFailedStatusDocker;
 
+function sendEmailNotificationFailedUncordon() {
+
+  curl --ssl-reqd \
+    --url "$SMTP_SRV":"$SMTP_PORT" \
+    --user "$SMTP_USR":"$SMTP_PASS" \
+    --mail-from "$MAIL_FROM" \
+    --mail-rcpt "$MAIL_TO_1" \
+    --mail-rcpt "$MAIL_TO_2" \
+    --upload-file "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_2";
+
+  if [ -e "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_2" ];
+  then
+     rm -rf "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_2";
+  fi
+
+}
+
+#sendEmailNotificationFailedUncordon;
+
+function sendEmailNotificationFailedDrain() {
+
+  curl --ssl-reqd \
+    --url "$SMTP_SRV":"$SMTP_PORT" \
+    --user "$SMTP_USR":"$SMTP_PASS" \
+    --mail-from "$MAIL_FROM" \
+    --mail-rcpt "$MAIL_TO_1" \
+    --mail-rcpt "$MAIL_TO_2" \
+    --upload-file "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_3";
+
+  if [ -e "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_3" ];
+  then
+     rm -rf "$CURRENT_LOCAL"/"$FAILED_NAME_FILE_EMAIL_CODE_3";
+  fi
+
+}
+
+#sendEmailNotificationFailedDrain;
