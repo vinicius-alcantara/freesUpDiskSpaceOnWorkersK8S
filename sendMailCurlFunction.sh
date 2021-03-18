@@ -2,8 +2,8 @@
 ###### VARs - CONFIG AND ACESS's ######
 SMTP_SRV="smtp.office365.com";
 SMTP_PORT="587";
-SMTP_USR="$(echo -ne "dmluaWNpdXMuYWxjYW50YXJhQHNvbW9zYWdpbGl0eS5jb20uYnI=" | base64 -d)";
-SMTP_PASS="$(echo -ne "TXVkYXJAMTIz" | base64 -d)"
+SMTP_USR="$(echo -ne "yyyyyyyyyy" | base64 -d)";
+SMTP_PASS="$(echo -ne "xxxxxxxxx" | base64 -d)"
 MAIL_FROM="$(echo -ne "dmluaWNpdXMuYWxjYW50YXJhQHNvbW9zYWdpbGl0eS5jb20uYnI=" | base64 -d)";
 MAIL_TO_1="vinicius.redes2011@gmail.com";
 MAIL_TO_2="vinicius.redes2020@gmail.com";
