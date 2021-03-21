@@ -1,0 +1,19 @@
+From: vinicius.alcantara@somosagility.com.br
+To: vinicius.redes2011@gmail.com vinicius.redes2020@gmail.com
+Subject: SUCCESS: SRM-SRV-node2
+echo '<html>
+Olá, boa noite,
+Espaço em disco liberado com sucesso no <b>servidor/worker</b> mencionado no assunto deste e-mail. Segue Evidências.
+
+<small>Antes</small>:
+
+Filesystem                       			Size Used Avail Use% Mounted
+/dev/mapper/ubuntu--vg-ubuntu--lv        37G  22G  16G  58%  	/
+
+Depois:
+
+Filesystem                                              Size Used Avail Use% Mounted
+/dev/mapper/ubuntu--vg-ubuntu--lv        37G  22G  16G  58%     /
+</body>
+</html>'
+
