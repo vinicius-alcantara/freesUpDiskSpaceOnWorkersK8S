@@ -10,7 +10,7 @@ MAIL_TO_1="$(echo -ne "dmluaWNpdXMucmVkZXMyMDExQGdtYWlsLmNvbQo=" | base64 -d)";
 MAIL_TO_2="$(echo "dmluaWNpdXMucmVkZXMyMDIwQGdtYWlsLmNvbQo=" | base64 -d)";
 SUBJECT_SUCCESS="SUCCESS: SRM-SRV";
 SUBJECT_FAILED="FAILED: SRM-SRV";
-SUCCESS_NAME_FILE_EMAIL="body_mail_success.html";
+SUCCESS_NAME_FILE_EMAIL="body_mail_success.txt";
 DIR_TEMPLATE_BODY_EMAILS="templates_emails";
 CURRENT_TIME_LOCAL="$(date +%H)";
 FAILED_NAME_FILE_EMAIL_CODE_1="body_mail_failed1.txt";
@@ -71,7 +71,8 @@ Filesystem                                              Size Used Avail Use% Mou
 #######################################
 BODY_MAIL_FAILED_CODE_1="
 From: "$MAIL_FROM"
-To: "$MAIL_TO_1" "$MAIL_TO_2"
+To: "$MAIL_TO_1"
+Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
@@ -82,7 +83,8 @@ Por favor, verificar.
 #######################################
 BODY_MAIL_FAILED_CODE_2="
 From: "$MAIL_FROM"
-To: "$MAIL_TO_1" "$MAIL_TO_2"
+To: "$MAIL_TO_1"
+Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
@@ -93,7 +95,8 @@ Por favor, verificar.
 #######################################
 BODY_MAIL_FAILED_CODE_3="
 From: "$MAIL_FROM"
-To: "$MAIL_TO_1" "$MAIL_TO_2"
+To: "$MAIL_TO_1"
+Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
@@ -104,7 +107,8 @@ Por favor, verificar
 #######################################
 BODY_MAIL_FAILED_CODE_4="
 From: "$MAIL_FROM"
-To: "$MAIL_TO_1" "$MAIL_TO_2"
+To: "$MAIL_TO_1"
+Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
@@ -115,7 +119,8 @@ Por favor, verificar
 #######################################
 BODY_MAIL_FAILED_CODE_5="
 From: "$MAIL_FROM"
-To: "$MAIL_TO_1" "$MAIL_TO_2"
+To: "$MAIL_TO_1"
+Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
@@ -130,14 +135,14 @@ function create_body_mail_success() {
 	echo "$BODY_MAIL_SUCCESS" | sed 1d > "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS"/"$SUCCESS_NAME_FILE_EMAIL";  
 }
 
-create_body_mail_success;
+#create_body_mail_success;
 
 function create_body_mail_failed_code_1() {
         cd "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS";
         echo "$BODY_MAIL_FAILED_CODE_1" | sed 1d > "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS"/"$FAILED_NAME_FILE_EMAIL_CODE_1";
 }
 
-create_body_mail_failed_code_1;
+#create_body_mail_failed_code_1;
 
 function create_body_mail_failed_code_2() {
         cd "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS";
@@ -198,6 +203,8 @@ function sendEmailNotificationCompleteSuccess() {
 
 function sendEmailNotificationFailedStatusDocker() {
 
+  sed -i s/"<WORKER_NAME>"/"$WORKER_NAME"/g "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS"/"$FAILED_NAME_FILE_EMAIL_CODE_1";
+
   curl --ssl-reqd \
     --url "$SMTP_SRV":"$SMTP_PORT" \
     --user "$SMTP_USR":"$SMTP_PASS" \
@@ -216,6 +223,8 @@ function sendEmailNotificationFailedStatusDocker() {
 #sendEmailNotificationFailedStatusDocker;
 
 function sendEmailNotificationFailedUncordon() {
+
+  sed -i s/"<WORKER_NAME>"/"$WORKER_NAME"/g "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS"/"$FAILED_NAME_FILE_EMAIL_CODE_2";
 
   curl --ssl-reqd \
     --url "$SMTP_SRV":"$SMTP_PORT" \
@@ -236,6 +245,8 @@ function sendEmailNotificationFailedUncordon() {
 
 function sendEmailNotificationFailedDrain() {
 
+  sed -i s/"<WORKER_NAME>"/"$WORKER_NAME"/g "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS"/"$FAILED_NAME_FILE_EMAIL_CODE_3";
+
   curl --ssl-reqd \
     --url "$SMTP_SRV":"$SMTP_PORT" \
     --user "$SMTP_USR":"$SMTP_PASS" \
@@ -255,6 +266,8 @@ function sendEmailNotificationFailedDrain() {
 
 function sendEmailNotificationFailedDrainUnschedulableFalse() {
 
+  sed -i s/"<WORKER_NAME>"/"$WORKER_NAME"/g "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS"/"$FAILED_NAME_FILE_EMAIL_CODE_4";
+
   curl --ssl-reqd \
     --url "$SMTP_SRV":"$SMTP_PORT" \
     --user "$SMTP_USR":"$SMTP_PASS" \
@@ -273,6 +286,8 @@ function sendEmailNotificationFailedDrainUnschedulableFalse() {
 #sendEmailNotificationFailedDrainUnschedulableFalse;
 
 function sendEmailNotificationFailedPruneImage() {
+
+  sed -i s/"<WORKER_NAME>"/"$WORKER_NAME"/g "$WORKDIR_FULL_PATH"/"$DIR_TEMPLATE_BODY_EMAILS"/"$FAILED_NAME_FILE_EMAIL_CODE_5";
 
   curl --ssl-reqd \
     --url "$SMTP_SRV":"$SMTP_PORT" \

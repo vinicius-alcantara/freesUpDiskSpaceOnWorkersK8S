@@ -1,5 +1,6 @@
 From: vinicius.alcantara@somosagility.com.br
-To: vinicius.redes2011@gmail.com vinicius.redes2020@gmail.com
+To: vinicius.redes2011@gmail.com
+Cc: vinicius.redes2020@gmail.com
 Subject: FAILED: SRM-SRV-<WORKER_NAME>
 
 Olá, bom dia,

@@ -1,8 +1,9 @@
 From: vinicius.alcantara@somosagility.com.br
-To: vinicius.redes2011@gmail.com vinicius.redes2020@gmail.com
+To: vinicius.redes2011@gmail.com
+Cc: vinicius.redes2020@gmail.com
 Subject: FAILED: SRM-SRV-<WORKER_NAME>
 
-Olá, bom dia,
+Olá, boa tarde,
 Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail. 
 Error: Falha ao realizar drain no worker. O worker permanece schedulando novos pods (Unschedulable = false).
 Por favor, verificar

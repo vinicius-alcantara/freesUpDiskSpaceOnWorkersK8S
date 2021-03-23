@@ -43,18 +43,18 @@ do
 			     if [ $UNSCHEDULABLE != "true" ];
 			     then
 			         function sendEmailNotificationFailedCode2(){
+				     create_body_mail_failed_code_2;
                                      sendEmailNotificationFailedUncordon;
                                  }
                                   sendEmailNotificationFailedCode2;
-                                  exit 0;
 			     fi
 			 fi
 		     else
 			 function sendEmailNotificationFailedCode4(){
+			     create_body_mail_failed_code_4;
                              sendEmailNotificationFailedDrainUnschedulableFalse;
                          }
                           sendEmailNotificationFailedCode4;
-                          exit 0;
 		     fi
 		    
 			UNSCHEDULABLE=$(kubectl describe no $WORKER_NAME | egrep "Unschedulable" | sed 's/ //g' | cut -d ":" -f2);
@@ -74,47 +74,123 @@ do
         			    DISK_PCENT_NEW=$(ssh "$USER"@"$WORKER_IP" df -h / --output=pcent | tail -n1);
 
 				    function sendEmailNotificationSuccess(){
-                                    sendEmailNotificationCompleteSuccess;
+					create_body_mail_success;
+                                        sendEmailNotificationCompleteSuccess;
                                     }
                                      sendEmailNotificationSuccess;
-                                     exit 0;
 
 			        else
 				    function sendEmailNotificationFailedCode5(){
+					create_body_mail_failed_code_5;
                                         sendEmailNotificationFailedPruneImage;
                                     }
                                      sendEmailNotificationFailedCode5;
-				     exit 0;
 				fi
 				
 			    else
 				function sendEmailNotificationFailedCode1(){
+				    create_body_mail_failed_code_1;
 				    sendEmailNotificationFailedStatusDocker;					
                                 }   
 				 sendEmailNotificationFailedCode1;
-				 exit 0;
 			    fi
 		        else
 			    function sendEmailNotificationFailedCode2(){
+				create_body_mail_failed_code_2;
                                 sendEmailNotificationFailedUncordon;
                             }
                              sendEmailNotificationFailedCode2;
-			     exit 0;
    		        fi			       
 	        else
 		    function sendEmailNotificationFailedCode3(){
+			create_body_mail_failed_code_3;
                         sendEmailNotificationFailedDrain;
                     }
 		     sendEmailNotificationFailedCode3;
-		     exit 0;
-		fi
-	fi	     
+		fi	
+	fi
 	
+	if [ "$DISK_SPACE_IN_USE_PERCENT" -ge 30 ] && [ "$ENVIRONMENT" == "DESENVOLVIMENTO" ]; 
+        then
+                kubectl drain $WORKER_NAME --force --timeout=500s --delete-emptydir-data --ignore-daemonsets;
+                if [ $? == 0 ];
+                then
+                     UNSCHEDULABLE=$(kubectl describe no $WORKER_NAME | egrep "Unschedulable" | sed 's/ //g' | cut -d ":" -f2);
+                     if [ $UNSCHEDULABLE == "true" ];
+                     then
+                         kubectl uncordon $WORKER_NAME;
+                         if [ $? != 0 ];
+                         then
+                             UNSCHEDULABLE=$(kubectl describe no $WORKER_NAME | egrep "Unschedulable" | sed 's/ //g' | cut -d ":" -f2);
+                             if [ $UNSCHEDULABLE != "true" ];
+                             then
+                                 function sendEmailNotificationFailedCode2(){
+				     create_body_mail_failed_code_2;
+                                     sendEmailNotificationFailedUncordon;
+                                 }
+                                  sendEmailNotificationFailedCode2;
+                             fi
+                         fi
+                     else
+                         function sendEmailNotificationFailedCode4(){
+			     create_body_mail_failed_code_4;
+                             sendEmailNotificationFailedDrainUnschedulableFalse;
+                         }
+                          sendEmailNotificationFailedCode4;
+                     fi
+		       UNSCHEDULABLE=$(kubectl describe no $WORKER_NAME | egrep "Unschedulable" | sed 's/ //g' | cut -d ":" -f2);
+                        if [ $UNSCHEDULABLE == "false" ];
+                        then
+
+                            ssh -t "$USER"@"$WORKER_IP" sudo systemctl restart docker && DOCKER_DAEMON_STATUS=$(ssh "$USER"@"$WORKER_IP" sudo systemctl status docker | egrep -i "active" | cut -d ")" -f1 | cut -d "(" -f1 | cut -d ":" -f2 | sed 's/ //g');
+
+                            if [ $? == 0 ] && [ $DOCKER_DAEMON_STATUS == "active" ];
+                            then
+                                ssh -t "$USER"@"$WORKER_IP" sudo docker image prune -af;
+                                if [ $? == 0 ];
+                                then
+                                    DISK_SIZE_NEW=$(ssh "$USER"@"$WORKER_IP" df -h / --output=size | tail -n1);
+                                    DISK_USED_NEW=$(ssh "$USER"@"$WORKER_IP" df -h / --output=used | tail -n1);
+                                    DISK_AVAIL_NEW=$(ssh "$USER"@"$WORKER_IP" df -h / --output=avail | tail -n1);
+                                    DISK_PCENT_NEW=$(ssh "$USER"@"$WORKER_IP" df -h / --output=pcent | tail -n1);
+
+                                    function sendEmailNotificationSuccess(){
+					create_body_mail_success;
+                                        sendEmailNotificationCompleteSuccess;
+                                    }
+                                     sendEmailNotificationSuccess;
+                                else
+                                    function sendEmailNotificationFailedCode5(){
+					create_body_mail_failed_code_5;    
+                                        sendEmailNotificationFailedPruneImage;
+                                    }
+                                     sendEmailNotificationFailedCode5;
+                                fi
+			    else
+                                function sendEmailNotificationFailedCode1(){
+				    create_body_mail_failed_code_1;
+                                    sendEmailNotificationFailedStatusDocker;
+                                }
+                                 sendEmailNotificationFailedCode1;
+                            fi
+                        else
+                            function sendEmailNotificationFailedCode2(){
+				create_body_mail_failed_code_2;
+                                sendEmailNotificationFailedUncordon;
+                            }
+                             sendEmailNotificationFailedCode2;
+                        fi
+                else
+                    function sendEmailNotificationFailedCode3(){
+			create_body_mail_failed_code_3;
+                        sendEmailNotificationFailedDrain;
+                    }
+                     sendEmailNotificationFailedCode3;
+                fi
+	fi		
 done
 
 }
 
 drainWorkersK8S;
-
-
 
