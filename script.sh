@@ -50,7 +50,6 @@ do
 			     fi
 			 fi
 		     else
-			 # Drain Unchedulable
 			 function sendEmailNotificationFailedCode4(){
                              sendEmailNotificationFailedDrainUnschedulableFalse;
                          }
@@ -81,8 +80,11 @@ do
                                      exit 0;
 
 			        else
-				    echo "Falha ao realizar prune image";
-				    exit 0;
+				    function sendEmailNotificationFailedCode5(){
+                                        sendEmailNotificationFailedPruneImage;
+                                    }
+                                     sendEmailNotificationFailedCode5;
+				     exit 0;
 				fi
 				
 			    else
