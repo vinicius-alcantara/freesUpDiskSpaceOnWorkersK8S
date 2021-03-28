@@ -4,7 +4,7 @@
 SMTP_SRV="smtp.office365.com";
 SMTP_PORT="587";
 SMTP_USR="$(echo -ne "dmluaWNpdXMuYWxjYW50YXJhQHNvbW9zYWdpbGl0eS5jb20uYnIK" | base64 -d)";
-SMTP_PASS="$(echo -ne "TXVkYXJAMTIzCg==" | base64 -d)"
+SMTP_PASS="$(echo -ne "aDRjazNyU0FAMTgxOTE1Uk9PVCFAIzIwMTgK" | base64 -d)"
 MAIL_FROM="$(echo -ne "dmluaWNpdXMuYWxjYW50YXJhQHNvbW9zYWdpbGl0eS5jb20uYnI=" | base64 -d)";
 MAIL_TO_1="$(echo -ne "dmluaWNpdXMucmVkZXMyMDExQGdtYWlsLmNvbQo=" | base64 -d)";
 MAIL_TO_2="$(echo "dmluaWNpdXMucmVkZXMyMDIwQGdtYWlsLmNvbQo=" | base64 -d)";
@@ -58,7 +58,7 @@ Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_SUCCESS"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Espaço em disco liberado com sucesso no servidor/worker mencionado no assunto deste e-mail. Segue Evidências.
+Espaço em disco liberado com sucesso no servidor/worker <WORKER_NAME>. Segue Evidências.
 
 Antes:
 Filesystem                       			Size Used Avail Use% Mounted
@@ -76,7 +76,7 @@ Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail.
+Falha ao tentar liberar espaço em disco no servidor/worker <WORKER_NAME>.
 Erro: Falha ao executar o restart no serviço do docker!!!
 Por favor, verificar.
 ";
@@ -88,7 +88,7 @@ Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail. 
+Falha ao tentar liberar espaço em disco no servidor/worker <WORKER_NAME>. 
 Erro: Falha ao realizar uncordon no worker.
 Por favor, verificar.
 ";
@@ -100,7 +100,7 @@ Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail. 
+Falha ao tentar liberar espaço em disco no servidor/worker <WORKER_NAME>. 
 Error: Falha ao realizar drain no worker. Provável ocorrência de timeout ao realizar o drain.
 Por favor, verificar
 ";
@@ -112,8 +112,8 @@ Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail. 
-Error: Falha ao realizar drain no worker. O worker permanece schedulando novos pods (Unschedulable = false).
+Falha ao tentar liberar espaço em disco no servidor/worker <WORKER_NAME>. 
+Error: Falha ao realizar drain no worker.
 Por favor, verificar
 ";
 #######################################
@@ -124,7 +124,7 @@ Cc: "$MAIL_TO_2"
 Subject: "$SUBJECT_FAILED"-<WORKER_NAME>
 
 Olá, "$INITIAL_MESSAGE_BODY_MAIL",
-Falha ao tentar liberar espaço em disco no servidor/worker mencionado no assunto deste e-mail. 
+Falha ao tentar liberar espaço em disco no servidor/worker <WORKER_NAME>. 
 Error: Falha ao realizar prune das imagens docker.
 Por favor, verificar
 ";
