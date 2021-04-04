@@ -3,9 +3,9 @@
 #######################################
 SMTP_SRV="smtp.office365.com";
 SMTP_PORT="587";
-SMTP_USR="$(echo -ne "dmluaWNpdXMuYWxjYW50YXJhQHNvbW9zYWdpbGl0eS5jb20uYnIK" | base64 -d)";
-SMTP_PASS="$(echo -ne "aDRjazNyU0FAMTgxOTE1Uk9PVCFAIzIwMTgK" | base64 -d)"
-MAIL_FROM="$(echo -ne "dmluaWNpdXMuYWxjYW50YXJhQHNvbW9zYWdpbGl0eS5jb20uYnI=" | base64 -d)";
+SMTP_USR="$(echo -ne "cnVuZGVjay5zcm1AYWdpbGl0eW5ldHdvcmtzLmNvbS5icg==" | base64 -d)";
+SMTP_PASS="$(echo -ne "NGcxbDF0eUBtcw==" | base64 -d)";
+MAIL_FROM="$(echo -ne "cnVuZGVjay5zcm1AYWdpbGl0eW5ldHdvcmtzLmNvbS5icg==" | base64 -d)";
 MAIL_TO_1="$(echo -ne "dmluaWNpdXMucmVkZXMyMDExQGdtYWlsLmNvbQo=" | base64 -d)";
 MAIL_TO_2="$(echo "dmluaWNpdXMucmVkZXMyMDIwQGdtYWlsLmNvbQo=" | base64 -d)";
 SUBJECT_SUCCESS="SUCCESS: SRM-SRV";

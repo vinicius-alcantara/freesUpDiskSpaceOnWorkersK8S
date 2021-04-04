@@ -28,7 +28,7 @@ do
 	DISK_AVAIL_OLD=$(ssh "$USER"@"$WORKER_IP" df -h / --output=avail | tail -n1);
 	DISK_PCENT_OLD=$(ssh "$USER"@"$WORKER_IP" df -h / --output=pcent | tail -n1);
 
-	if [ "$DISK_SPACE_IN_USE_PERCENT" -ge 30 ] && [ "$ENVIRONMENT" == "PRODUCAO" ]; #&& [ "$CURRENT_TIME" -ge 20 ]; 
+	if [ "$DISK_SPACE_IN_USE_PERCENT" -ge 30 ] && [ "$ENVIRONMENT" == "PRODUCAO" ] && [ "$CURRENT_TIME" -ge 20 ]; 
 	then
 	   	kubectl drain $WORKER_NAME --force --timeout=500s --delete-emptydir-data --ignore-daemonsets;
 		if [ $? == 0 ];
